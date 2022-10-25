@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- CSS only -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th style="width: 20px">ID</th>
+            <th>Name</th>
+            <th>Last Name</th>
+            <th style="width: 100px">Age</th>
+            <th>Job</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td>
+              <input class="form-control" type="text" v-model="user.name" />
+            </td>
+            <td>
+              <input class="form-control" type="text" v-model="user.lastName" />
+            </td>
+            <td>
+              <input class="form-control" type="text" v-model="user.age" />
+            </td>
+            <td>
+              <input class="form-control" type="text" v-model="user.job" />
+            </td>
+            <td colspan="2">
+              <div class="d-grid">
+                <button class="btn btn-primary" @click="saveUser">
+                  Kaydet
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr v-for="(user, index) in userList" :key="index">
+            <td>
+              <span>{{user.id}}</span>
+            </td>
+            <td>
+              <input
+                v-if="updateIndex===index"
+                class="form-control"
+                type="text"
+                v-model="changedUser.name"
+              />
+              <span v-else>{{user.name}}</span>
+            </td>
+            <td>
+              <input
+                v-if="updateIndex===index"
+                class="form-control"
+                type="text"
+                v-model="changedUser.lastName"
+              />
+              <span v-else>{{user.lastName}}</span>
+            </td>
+            <td>
+              <input
+                v-if="updateIndex===index"
+                class="form-control"
+                type="text"
+                v-model="changedUser.age"
+              />
+              <span v-else>{{user.age}}</span>
+            </td>
+            <td>
+              <input
+                v-if="updateIndex===index"
+                class="form-control"
+                type="text"
+                v-model="changedUser.job"
+              />
+              <span v-else>{{user.job}}</span>
+            </td>
+            <td>
+              <!-- <button v-if="updateIndex===index" class="btn btn-success">Kaydet</button> -->
+              <button class="btn btn-success" @click="updateUser(index)">
+                Güncelle
+              </button>
+            </td>
+            <td>
+              <button
+                v-if="updateIndex===index"
+                class="btn btn-danger"
+                @click="cancel"
+              >
+                İptal
+              </button>
+              <button v-else class="btn btn-danger" @click="deleteUser(index)">
+                Sil
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          updateIndex: null,
+          changedUser: null,
+          user: {
+            name: null,
+            lastName: null,
+            age: null,
+            job: null,
+          },
+          userList: [
+            {
+              id: 1,
+              name: "Yiğithan",
+              lastName: "Oğuz",
+              age: 22,
+              job: "Frontend Developer",
+            },
+            {
+              id: 2,
+              name: "Ahmet",
+              lastName: "Yılmaz",
+              age: 32,
+              job: "Backend Developer",
+            },
+            {
+              id: 3,
+              name: "Mehmet",
+              lastName: "Yıldırım",
+              age: 28,
+              job: "Fullstack Developer",
+            },
+            {
+              id: 4,
+              name: "Selim",
+              lastName: "Güneş",
+              age: 42,
+              job: "Frontend Developer",
+            },
+          ],
+        },
+        methods: {
+          saveUser() {
+            this.userList.push({
+              ...this.user,
+              id: this.userList[this.userList.length - 1].id + 1,
+            });
+            this.user = {};
+          },
+          deleteUser(value) {
+            this.userList.splice(value, 1);
+          },
+          updateUser(value) {
+            if (this.updateIndex !== value) {
+              this.updateIndex = value;
+              this.changedUser = { ...this.userList[value] };
+            } else {
+              this.userList[value] = this.changedUser;
+              this.updateIndex = null;
+            }
+          },
+          cancel() {
+            this.changedUser = {};
+            this.updateIndex = null;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
